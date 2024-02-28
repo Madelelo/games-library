@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div>
+      <h1>My games</h1>
+    </div>
+
+    <div id="game-list"></div>
+  </body>
+
+  <script>
+    let PROJECT_ID = "x9czv3a6"; //Hent din project ID på sanity.io/manage
+    let DATASET = "production";
+    let QUERY = encodeURIComponent('*[_type == "games"]');
+
+    let URL = `https://${PROJECT_ID}.api.sanity.io/v2021-10-21/data/query/${DATASET}?query=${QUERY}`;
+
+    async function hentData() {
+      let response = await fetch(URL); //venter på svar fra Sanity før den går videre
+
+      let data = await response.json(); // gjør om svaret fra Sanity til JSON
+
+      let gameList = data.result;
+      console.log(gameList);
+      let gameListDiv = document.getElementById("game-list");
+
+      gameListDiv.innerHTML = gameList
+        .map((game) => {
+          return `<div> 
+                    <h2> ${game.name} </h2> 
+                    <p>${game.year}<p>
+
+                </div>`;
+        })
+        .join(""); // fjerner ,
+    }
+
+    hentData();
+  </script>
+</html>
